@@ -1,10 +1,7 @@
-import express from "express";
 import fetch from "node-fetch";
 import * as cheerio from "cheerio";
 
-const app = express();
-
-app.get("/", async (req, res) => {
+export default async function handler(req, res) {
   try {
     const response = await fetch("https://www.ysscores.com/ar/today_matches", {
       headers: {
@@ -38,10 +35,10 @@ app.get("/", async (req, res) => {
     });
 
     html += "</body></html>";
-    res.send(html);
-  } catch (e) {
-    res.send("خطأ: " + e.message);
-  }
-});
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.status(200).send(html);
+  } catch (e) {
+    res.status(500).send("خطأ: " + e.message);
+  }
+}
